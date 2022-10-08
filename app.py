@@ -1,5 +1,6 @@
 # Python
 from datetime import datetime
+from email import message
 from typing import Text, Optional
 from uuid import uuid4 as uuid
 
@@ -38,10 +39,16 @@ def save_post(post: Post):
     return posts[-1]
 
 @app.get('/posts/{post_id}')
-def get_post(post_id):
+def get_post(post_id: str):
     for post in posts:
         if post['id'] == post_id:        
             return post 
-    else:
-        return 'Not found'              
- 
+    raise HTTPException(status_code=404, detail='Post not found')     
+
+@app.delete('/posts/{post_id}')
+def delete_post(post_id: str):
+    for index, post in enumerate(posts):
+        if post['id'] == post_id:
+            posts.pop(index)
+            return {'message': 'The post has been delete successfully'}
+    raise HTTPException(status_code=404, detail='Post not found')
