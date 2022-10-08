@@ -50,5 +50,15 @@ def delete_post(post_id: str):
     for index, post in enumerate(posts):
         if post['id'] == post_id:
             posts.pop(index)
-            return {'message': 'The post has been delete successfully'}
+            return {'message': 'The post has been deleted successfully'}
+    raise HTTPException(status_code=404, detail='Post not found')
+
+@app.put('/posts/{post_id}')
+def update_post(post_id: str, updatePost: Post):
+    for index, post in enumerate(posts):
+        if post['id'] == post_id:
+            posts[index]['title'] = updatePost.title
+            posts[index]['content'] = updatePost.content
+            posts[index]['author'] = updatePost.author
+            return {'message': 'The post has been updated successfully'}
     raise HTTPException(status_code=404, detail='Post not found')
